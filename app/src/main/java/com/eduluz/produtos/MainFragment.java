@@ -1,6 +1,7 @@
 package com.eduluz.produtos;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.printservice.PrintDocument;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.eduluz.produtos.model.Produto;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.UUID;
 
@@ -40,11 +43,13 @@ public class MainFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    Fragment myFragment = this;
 
     private OnFragmentInteractionListener mListener;
 
     private Realm realm;
     private TextView textcontent;
+    private TextView scancontent;
     private Button do_work;
     private Produto prod;
 
@@ -74,6 +79,8 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+
         //Configure Realm for the Application
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getActivity().getApplicationContext())
                 .name("examples.realm")
@@ -98,13 +105,23 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_main, container, false);
         textcontent = (TextView) v.findViewById(R.id.text_context);
+        scancontent = (TextView) v.findViewById(R.id.text_context);
+
         v.findViewById(R.id.do_work).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 realm.beginTransaction();
-                Produto produto = realm.where(Produto.class).findFirst();
-                produto.setNome("ABC");
+                Produto prod = realm.where(Produto.class).findFirst();
+                prod.setNome("ABC");
                 realm.commitTransaction();
+            }
+        });
+
+        v.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator scanIntegrator = new IntentIntegrator(getActivity());
+                scanIntegrator.initiateScan();
             }
         });
 
@@ -122,26 +139,27 @@ public class MainFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Produto produto  = realm.createObject(Produto.class);
-                produto.setId(UUID.randomUUID().toString());
-                produto.setNome("Produto 1");
-                produto.setDescricao("Produto Teste");
-                produto.setPreco((float) 10.1);
-
-                prod = realm.where(Produto.class).findFirst();
-                textcontent.setText(produto.getNome().toString());
-
-                realm.addChangeListener(realmChangeListener);
-            }
-        });
-
-        RealmResults<Produto> produtos = realm.where(Produto.class).findAll();
-        for( Produto p : produtos){
-            Log.d("Realm ", p.getNome());
-        }
+//        realm.executeTransaction(new Realm.Transaction() {
+//            @Override
+//            public void execute(Realm realm) {
+//                Produto produto  = realm.createObject(Produto.class);
+//                produto.setId(UUID.randomUUID().toString());
+//                produto.setNome("Produto 1");
+//                produto.setDescricao("Produto Teste");
+//                produto.setPreco((float) 10.2);
+//
+//
+//                RealmResults<Produto> results = realm.where(Produto.class).findAll();
+//                prod = results.last();
+//                textcontent.setText(produto.getNome().toString());
+//                realm.addChangeListener(realmChangeListener);
+//            }
+//        });
+//
+//        RealmResults<Produto> produtos = realm.where(Produto.class).findAll();
+//        for( Produto p : produtos){
+//            Log.d("Realm ", p.getNome());
+//        }
     }
 
     RealmChangeListener realmChangeListener = new RealmChangeListener() {
@@ -204,5 +222,18 @@ public class MainFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        String scanData = (scanningResult != null) ? scanningResult.getContents() : "";
+
+        if (scanData == null || scanData.isEmpty()){
+            textcontent.setText("No data");
+        } else {
+            textcontent.setText(scanData);
+        }
     }
 }
