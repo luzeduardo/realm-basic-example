@@ -223,17 +223,4 @@ public class MainFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        String scanData = (scanningResult != null) ? scanningResult.getContents() : "";
-
-        if (scanData == null || scanData.isEmpty()){
-            textcontent.setText("No data");
-        } else {
-            textcontent.setText(scanData);
-        }
-    }
 }
