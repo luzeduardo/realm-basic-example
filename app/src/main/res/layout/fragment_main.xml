@@ -14,13 +14,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/text_context"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/do_work"
-            android:text="@string/dowork"/>
+            android:id="@+id/scan_bar"
+            android:textIsSelectable="true"/>
 
         <Button android:id="@+id/scan_button"
             android:layout_width="match_parent"
@@ -28,21 +23,25 @@
             android:layout_centerHorizontal="true"
             android:text="@string/scan" />
 
-        <TextView
-            android:id="@+id/scan_format"
+        <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/scan_button" />
+            android:id="@+id/do_work"
+            android:text="@string/dowork"/>
 
-        <TextView
-            android:id="@+id/scan_content"
+        <EditText
+            android:id="@+id/scan_nome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/scan_format" />
+            />
+
+        <EditText
+            android:id="@+id/scan_preco"
+            android:inputType="numberDecimal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true" />
 
     </LinearLayout>
 

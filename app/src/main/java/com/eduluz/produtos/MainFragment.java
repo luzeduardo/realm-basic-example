@@ -48,9 +48,11 @@ public class MainFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private Realm realm;
-    private TextView textcontent;
-    private TextView scancontent;
-    private Button do_work;
+    private TextView textContent;
+    private TextView scanNome;
+    private TextView scanPreco;
+    private TextView scanBar;
+    private Button doWork;
     private Produto prod;
 
     public MainFragment() {
@@ -104,15 +106,18 @@ public class MainFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_main, container, false);
-        textcontent = (TextView) v.findViewById(R.id.text_context);
-        scancontent = (TextView) v.findViewById(R.id.text_context);
+        scanNome = (TextView) v.findViewById(R.id.scan_nome);
+        scanPreco = (TextView) v.findViewById(R.id.scan_preco);
+        scanBar = (TextView) v.findViewById(R.id.scan_bar);
 
         v.findViewById(R.id.do_work).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 realm.beginTransaction();
-                Produto prod = realm.where(Produto.class).findFirst();
-                prod.setNome("ABC");
+                Produto prod = new Produto();
+                prod.setBarcode(scanBar.getText().toString());
+                prod.setNome(scanNome.getText().toString());
+                prod.setPreco(Float.valueOf(scanPreco.getText().toString()));
                 realm.commitTransaction();
             }
         });
@@ -166,7 +171,7 @@ public class MainFragment extends Fragment {
         @Override
         public void onChange(Object element) {
             Log.d("Realm", "The Realm has been updated");
-            textcontent.setText(prod.getNome());
+            textContent.setText(prod.getNome());
         }
     };
 

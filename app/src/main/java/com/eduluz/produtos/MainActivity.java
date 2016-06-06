@@ -16,14 +16,14 @@ import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
     private Realm realm;
-    private TextView textcontent;
+    private TextView scanBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textcontent = (TextView) findViewById(R.id.text_context);
+        scanBar = (TextView) findViewById(R.id.scan_bar);
     }
 
     @Override
@@ -50,9 +50,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
         String scanData = (scanningResult != null) ? scanningResult.getContents() : "";
 
         if (scanData == null || scanData.isEmpty()){
-            textcontent.setText("No data");
+            scanBar.setText("No data");
         } else {
-            textcontent.setText(scanData);
+            scanBar.setText(scanData);
         }
     }
 }
