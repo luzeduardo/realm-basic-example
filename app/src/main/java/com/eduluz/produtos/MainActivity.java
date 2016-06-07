@@ -2,28 +2,57 @@ package com.eduluz.produtos;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.w3c.dom.Text;
-
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
     private Realm realm;
     private TextView scanBar;
+    private Button listar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+        }
         scanBar = (TextView) findViewById(R.id.scan_bar);
+
+        findViewById(R.id.do_listar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                ListFragment listFragment = new ListFragment();
+                listFragment.setArguments(getIntent().getExtras());
+                transaction.replace(R.id.fragment_container, listFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+        findViewById(R.id.do_cadastrar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                MainFragment mainFragment = new MainFragment();
+                mainFragment.setArguments(getIntent().getExtras());
+                transaction.replace(R.id.fragment_container, mainFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
     }
 
     @Override

@@ -9,11 +9,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.eduluz.produtos.MainActivity">
 
-    <fragment
+    <!--<fragment-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/detail_fragment"-->
+        <!--android:name="com.eduluz.produtos.MainFragment"-->
+        <!--/>-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/do_listar"
+        android:text="@string/listar"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/do_cadastrar"
+        android:text="@string/cadastrar"
+        android:layout_below="@+id/do_listar"
+        android:paddingTop="10dp"
+        />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/detail_fragment"
-        android:name="com.eduluz.produtos.MainFragment"
-        />
+        android:id="@+id/fragment_container"
+        android:layout_below="@+id/do_cadastrar"
+        >
+    </FrameLayout>
 
 </RelativeLayout>
