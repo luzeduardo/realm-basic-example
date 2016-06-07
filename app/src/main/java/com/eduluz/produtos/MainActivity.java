@@ -13,6 +13,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
     private Realm realm;
@@ -23,12 +24,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (findViewById(R.id.fragment_container) != null) {
-            if (savedInstanceState != null) {
-                return;
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .name("examples.realm")
+                .build();
+        //Make this real the default
+        Realm.setDefaultConfiguration(realmConfiguration);
+        realm = Realm.getInstance(realmConfiguration);
+
+        findViewById(R.id.do_cadastrar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                MainFragment mainFragment = new MainFragment();
+                mainFragment.setArguments(getIntent().getExtras());
+                transaction.replace(R.id.fragment_container, mainFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
-        }
-        scanBar = (TextView) findViewById(R.id.scan_bar);
+        });
 
         findViewById(R.id.do_listar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,17 +56,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
             }
         });
 
-        findViewById(R.id.do_cadastrar).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                MainFragment mainFragment = new MainFragment();
-                mainFragment.setArguments(getIntent().getExtras());
-                transaction.replace(R.id.fragment_container, mainFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
             }
-        });
+        }
     }
 
     @Override
@@ -75,6 +83,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnFr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        scanBar = (TextView) findViewById(R.id.scan_bar);
+
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         String scanData = (scanningResult != null) ? scanningResult.getContents() : "";
 

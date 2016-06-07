@@ -80,20 +80,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-        //Configure Realm for the Application
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(getActivity().getApplicationContext())
-                .name("examples.realm")
-                .build();
-
-        //Realm.deleteRealm(realConfiguration); //delete the realm
-
-        //Make this real the default
-        Realm.setDefaultConfiguration(realmConfiguration);
-        realm = Realm.getInstance(realmConfiguration);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
